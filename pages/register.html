@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rejestracja - MovieFlix</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+  <main class="bg-white p-8 rounded shadow max-w-md w-full">
+    <h1 class="text-2xl font-bold mb-6 text-center">Zarejestruj się</h1>
+    <form id="register-form" class="space-y-4">
+      <input type="text" name="username" placeholder="Nazwa użytkownika" required
+        class="w-full border border-gray-300 rounded p-2" />
+      <input type="email" name="email" placeholder="Email" required
+        class="w-full border border-gray-300 rounded p-2" />
+      <input type="text" name="password" placeholder="Hasło" required
+        class="w-full border border-gray-300 rounded p-2" />
+      <input type="text" name="repeatPassword" placeholder="Powtórz hasło" required
+        class="w-full border border-gray-300 rounded p-2" />
+      <button type="submit" class="w-full bg-green-600 text-white p-3 rounded hover:bg-green-700 transition">
+        Zarejestruj się
+      </button>
+    </form>
+
+    <p class="mt-4 text-center text-sm">
+      Masz konto? <a href="login.html" class="text-green-600 hover:underline">Zaloguj się</a>
+    </p>
+  </main>
+
+  <script src="../api/register-script.js"></script>
+
+</body>
+</html>
