@@ -9,101 +9,148 @@ const home_page_btn = document.getElementById("home-page-btn");
 
 const message1 = document.getElementById("message-after-enter-mail");
 const message2 = document.getElementById("message-after-enter-code");
-const message3 = document.getElementById("message-after-enter-code");
+const message3 = document.getElementById("password-changed-success").querySelector("h2");
+
+const global_error = document.getElementById("global-error");
+const login_page_btn = document.getElementById("get-back-to-login-page-btn");
 
 function showMessage(text, success, p) {
-  console.log("text = ", text);
     p.innerHTML = text;
 
+    p.classList.remove("text-red-600");
     // dodaje odpowiednie klasy Tailwind stylizujące
     p.classList.add(success ? "text-green-600" : "text-red-600");
     p.classList.remove("hidden");
 }
 
+function blockSubmitBtn(form) {
+  form.querySelector("button[type='submit']").disabled = true;
+}
+
+function unblockSubmitBtn(form) {
+  form.querySelector("button[type='submit']").disabled = false;
+}
+
+function redirectToLogin() {
+  window.location.href = "../pages/login.html";
+}
+
 // sendPost
-async function postData(url, body, p) {
-  const response = await fetch(url, {
+async function postData(url, body) {
+  try {
+    const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
-  const data = await response.json();  // może rzucić wyjątek
+  // sprawdz czy odp nie jest pusta np gdy kliknie szybko pare razy
+    const data = await response.json();  // może rzucić wyjątek
 
-  if (!response.ok) {
-    showMessage(data.detail, false, p);
-    throw new Error(data.detail);
+    if (!response.ok) {
+      throw new Error(data.detail);
+    }
+
+    console.log("Odpowiedź serwera: ", data);
+
+    return data;
+  } catch (error) {
+    // W javaScript jeśli funkcja async nie ma return w catch ani throw, to domyślnie zwraca undefined
+    console.error("Something went wrong with given request.");
+    if(error.message == "failed to fetch") {
+      setTimeout(() => {
+        redirectToLogin();
+      }, 3000); // po 3 sekundach komunikatu 'failed to fetch' przekieruj do strony logowania
+    }
+    throw error;
   }
+}
 
-  console.log(data);
-  return data;
+async function onSubmitForm1(e) {
+    // blokujemy 2 zatwierdzenie
+    blockSubmitBtn(form);
+    e.preventDefault();
+      const email = form.email.value;
+      localStorage.setItem("email", email);
+      try {
+        const data = await postData(step1_endpoint, { email }); // responseData
+        showMessage(data.message, true, message1);
+        form.classList.add("hidden");
+      
+        form2.classList.remove("hidden");
+      } catch (error) {
+        showMessage(error.message, false, message1);
+        console.error("Cannot to send request to ", step1_endpoint);
+      } finally {
+        //  odblokujmy przycisk nie ważne co wczesniej
+        unblockSubmitBtn(form);
+      }
+}
+
+async function onSubmitForm2(e) {
+  const email = localStorage.getItem("email");
+  message1.classList.add("hidden");
+  blockSubmitBtn(form);
+  e.preventDefault();
+  // usuń wcześniejszą wiadomosc
+  
+  const code = parseInt(form2.code.value, 10);
+  localStorage.setItem("code", code);
+  const body2 = {
+    email: email,
+    code: code
+  };
+  try {
+    const data2 = await postData(step2_endpoint, body2);
+    showMessage(data2.message, true, message2);
+    
+    form2.classList.add("hidden");
+    form3.classList.remove("hidden");
+  } catch (error) {
+    showMessage(error.message, false, message2);
+    console.error("Cannot send request to: ", step2_endpoint);
+  } finally {
+    unblockSubmitBtn(form2);
+  }
+} 
+
+async function onSubmitForm3(e) {
+  const email = localStorage.getItem("email");
+  const code = localStorage.getItem("code");
+  message2.classList.add("hidden");
+  blockSubmitBtn(form3);
+  e.preventDefault();
+  
+  const body3 = {
+    email: email,
+    code: code,
+    password: form3.password1.value,
+    repeatPassword: form3.password2.value
+  }
+  try {
+    const data3 = await postData(step3_endpoint, body3);
+    // jak submitnie to wtedy show komunikat
+    showMessage(data3.message, true, message3);
+
+    form3.classList.add("hidden");
+    message3.parentElement.classList.remove("hidden");
+    
+  } catch (error) {
+    showMessage(error.message, false, message3);
+    console.log("Cannot send request to ", step3_endpoint);
+  } finally {
+    unblockSubmitBtn(form3);
+  }
 }
 
 // 1.
 async function handleSendEmail() {
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    try {
-      const email = form.email.value;
-      localStorage.setItem("email", email);
-      const data = await postData(step1_endpoint, { email }, message1); // responseData
-      console.log(1);
-      showMessage(data.message, true, message1);
-      console.log(2);
+  form.addEventListener("submit", onSubmitForm1);
 
-      // 2. hidden
-      form.classList.add("hidden");
-    
-      // display
-      form2.classList.remove("hidden");
+  form2.addEventListener("submit", onSubmitForm2);
 
-      form2.addEventListener("submit", async function(e) {
-        e.preventDefault();
-        const code = parseInt(form2.code.value, 10);
-        const body2 = {
-          email: email,
-          code: code
-        };
-        const data2 = await postData(step2_endpoint, body2, message2);
-        // jesli zly kod no to showMessage(false)
-        // if(data2.)
-
-        console.log("wyslano 2., data2 = ", data2);
-        // show message
-        showMessage(data2.message, true, message2);
-
-        // hide form, display form
-        form2.classList.add("hidden");
-        form3.classList.remove("hidden");
-
-        form3.addEventListener("submit", async function(e) {
-          e.preventDefault();
-          
-          const body3 = {
-            email: email,
-            code: code,
-            password: form3.password1.value,
-            repeatPassword: form3.password2.value
-          }
-          
-          console.log("password1:", form3.password1.value);
-console.log("password2:", form3.password2.value);
-          const data3 = await postData(step3_endpoint, body3, message3);
-
-          // jak submitnie to wtedy show komunikat
-          showMessage(data3.message, true, message3);
-
-          // show button to get back to home page
-          home_page_btn.classList.remove("hidden");
-        })
-      })
-
-      // odczytaj kod i wyslij
+  form3.addEventListener("submit", onSubmitForm3);
       
-      } catch (error) {
-        showMessage(error.message, false, message1);
-      }
-  });
 }
 
 handleSendEmail();
