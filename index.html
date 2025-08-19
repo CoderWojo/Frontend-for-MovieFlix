@@ -8,18 +8,30 @@
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
 
-  <header class="bg-blue-600 p-4 text-white text-center font-bold text-xl">
-    MovieFlix
-  </header>
-
-  <main class="flex-grow max-w-3xl mx-auto p-6">
-    <div>
-      <p class="text-3xl font-semibold">Witamy w Movieflix!</p>
+<header class="bg-blue-600 w-full text-white shadow-lg">
+  <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+    <!-- logo + nazwa -->
+    <div class="flex items-center gap-2">
+      <img src="https://placehold.co/40x40?text=🎬" alt="Logo" class="w-10 h-10 rounded-full" />
+      <a href="index.html"><span class="font-bold text-xl">MovieFlix</span></a>
     </div>
+
+    <!-- miejsce na przycisk logowania / ikonę użytkownika -->
+    <div id="auth-section" class="flex"></div>
+  </div>
+</header>
+
+
+  <main class="flex-grow max-w-2xl mx-auto p-6">
+    <div>
+      <p class="text-3xl font-black">Witamy w Movieflix!</p>
+    </div>
+    
     <div id="buttons-container" class="flex justify-center gap-6 mt-8">
       <button id="login-btn" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
         Zaloguj się
       </button>
+
       <button id="register-btn" class="bg-gray-300 text-gray-700 px-6 py-3 rounded hover:bg-gray-400 transition">
         Zarejestruj się
       </button>
@@ -27,49 +39,31 @@
 
     <section class="mt-12 max-w-md mx-auto">
       <h2 class="text-xl font-semibold mb-4">Najczęściej zadawane pytania</h2>
-      <details class="mb-3 p-4 bg-white rounded shadow cursor-pointer">
-        <summary class="font-medium cursor-pointer">Czy mogę oglądać filmy za darmo?</summary>
+      <details class="mb-3 p-4 bg-white rounded shadow-md cursor-pointer">
+        <summary class="font-medium cursor-pointer">Czy mogę przeglądać filmy za darmo?</summary>
         <p class="mt-2 text-gray-700">Tak, wiele filmów jest dostępnych bez opłat.</p>
       </details>
-      <details class="mb-3 p-4 bg-white rounded shadow cursor-pointer">
+
+      <details class="mb-3 p-4 bg-white rounded shadow-md cursor-pointer">
         <summary class="font-medium cursor-pointer">Jak dodać film?</summary>
         <p class="mt-2 text-gray-700">Wymagana jest rejestracja i zalogowanie się na konto administratora.</p>
       </details>
     </section>
+    <div id="under-faq" class="flex justify-center">
+    </div>
 
-    <!-- Przykładowe filmy -->
-    <section class="mt-12">
-      <h2 class="text-xl font-semibold mb-6 text-center">Popularne filmy</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-        <div class="bg-white rounded shadow overflow-hidden">
-          <img src="https://placehold.co/300x400?text=Film+1" alt="Film 1" class="w-full" />
-          <div class="p-4">
-            <h3 class="font-semibold text-lg">Film 1</h3>
-            <p class="text-sm text-gray-600">Dramat / 2023</p>
-          </div>
-        </div>
-        <div class="bg-white rounded shadow overflow-hidden">
-          <img src="https://placehold.co/300x400?text=Film+2" alt="Film 2" class="w-full" />
-          <div class="p-4">
-            <h3 class="font-semibold text-lg">Film 2</h3>
-            <p class="text-sm text-gray-600">Komediodramat / 2022</p>
-          </div>
-        </div>
-        <div class="bg-white rounded shadow overflow-hidden">
-          <img src="https://placehold.co/300x400?text=Film+3" alt="Film 3" class="w-full" />
-          <div class="p-4">
-            <h3 class="font-semibold text-lg">Film 3</h3>
-            <p class="text-sm text-gray-600">Thriller / 2021</p>
-          </div>
-        </div>
-      </div>
+    <section id="popular-films" class="mt-12">
+    <h2 class="text-xl font-semibold mb-6 text-center">Popularne filmy</h2>
+    <div id="movies" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+    
+    </div>
+
     </section>
-<div id="posters-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-6"></div>
-
   </main>
 
-  <script src="script.js">
-  </script>
+  <script src="script.js"></script>
 
+<h2 class="inline bg-red-200">elo</h2>
+<span class="bg-green-200 text-center">ciekawe ile</span>
 </body>
 </html>
