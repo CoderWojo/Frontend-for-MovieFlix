@@ -1,5 +1,6 @@
 // const login_endpoint = "http://localhost:8080/api/v1/auth/login";
 const get_three_endpoint = "http://localhost:8080/api/v1/movie/firstThree";
+const checkToken_endpoint = "http://localhost:8080/api/v1/settings/me";
 
 const login_btn = document.getElementById("login-btn");
 const register_btn = document.getElementById("register-btn");
@@ -18,8 +19,10 @@ function redirectToRegisterPage() {
 
 login_btn.addEventListener("click", redirectToLoginPage);
 register_btn.addEventListener("click", redirectToRegisterPage);
+const accessToken = localStorage.getItem("accessToken");
 
 getThree();
+checkAccessToken(accessToken);
 
 async function getThree() {
   try {
@@ -61,10 +64,43 @@ async function getThree() {
   }
 }
 
-  const accessToken = localStorage.getItem("accessToken");
+function showButtons() {
+    // jeśli niezalogowany – pokaż przycisk logowania
+  authSection.innerHTML = `
+    <a href="/pages/login.html" class="bg-white text-blue-600 px-4 py-2 mr-4 rounded hover:bg-gray-300 transition font-semibold">
+      Zaloguj się
+    </a> 
+          <a href="/pages//register.html" class="bg-black text-blue-600 px-4 py-2 rounded hover:bg-gray-800 transition font-semibold">
+      Zarejestruj się
+    </a>
+  `;
+}
 
-  // TODO: wylogowanie sie , delete refreshTOken(cookie, db), delete AccessToken
+async function checkAccessToken(accessToken) {
   if(accessToken) {
+    // wyslij request na /me i sprawdz odp
+    try {
+      const res = await fetch(checkToken_endpoint, {
+        headers: {
+          "Authorization": "Bearer " + accessToken
+        }
+      });
+
+      if(!res.ok) {
+        if(res.status == 401 || res.status == 403) {
+
+          showButtons();
+          localStorage.removeItem("accessToken");
+          console.warn("Token invalid. Usunięto z localStorage");
+          return false;
+        }
+      }
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+
     buttons_container.classList.add("hidden"); 
     // jeśli zalogowany – pokaż ikonę użytkownika oraz przycisk wyloguj się
     authSection.innerHTML = `
@@ -72,20 +108,15 @@ async function getThree() {
       Twoje konto 👤</a>
     
     <h2 class="ml-5 hover:text-gray-400 hover: transition"> Wyloguj się</h2>
-  `;
-
-      underFaq.innerHTML = `
-      <button id="login-btn" onclick="window.location.href='/pages/all-movies.html'" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition">
-        Zobacz wszystkie filmy
-      </button>`;
-  } else {
-    // jeśli niezalogowany – pokaż przycisk logowania
-    authSection.innerHTML = `
-      <a href="/pages/login.html" class="bg-white text-blue-600 px-4 py-2 mr-4 rounded hover:bg-gray-300 transition font-semibold">
-        Zaloguj się
-      </a> 
-            <a href="/pages//register.html" class="bg-black text-blue-600 px-4 py-2 rounded hover:bg-gray-800 transition font-semibold">
-        Zarejestruj się
-      </a>
     `;
+
+    underFaq.innerHTML = `
+    <button id="login-btn" onclick="window.location.href='/pages/all-movies.html'" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition">
+      Zobacz wszystkie filmy
+    </button>`;
+
+    return false;
+  } else {
+    showButtons();
   }
+}

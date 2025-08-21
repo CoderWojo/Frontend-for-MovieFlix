@@ -6,10 +6,25 @@
   <title>Rejestracja - MovieFlix</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-  <main class="bg-white p-8 rounded shadow max-w-md w-full">
-    <h1 class="text-2xl font-bold mb-6 text-center">Zarejestruj się</h1>
+<!-- flex działa tylko na bezpośrednie dzieci danego kontenera (w tym przypadku tylko na main) -->
+<body class="bg-gray-100 flex flex-col justify-center min-h-screen">
+  <header class="bg-blue-600 w-full text-white shadow-lg">
+  <div class="mx-auto flex items-center p-4">
+    <!-- logo + nazwa -->
+    <div class="flex items-center gap-2">
+      <img src="https://placehold.co/40x40?text=🎬" alt="Logo" class="rounded-full" />
+      <a href="../index.html"><span class="font-bold text-xl">MovieFlix</span></a>
+    </div>
+
+    <!-- miejsce na przycisk logowania i ikonę użytkownika -->
+    <div id="auth-section" class="flex"></div>
+  </div>
+    </header>
+  <main class="bg-white flex flex-col flex-grow p-8 rounded shadow max-w-md w-full mx-auto mt-6">
+    <div id="success-box" class="text-2xl font-semibold hidden text-center">Zarejestrowano pomyślnie! ✅</div>
+
+    <h1 id="register-header" class="text-2xl font-bold mb-6 text-center">Zarejestruj się</h1>
     <form id="register-form" class="space-y-4">
       <input type="text" name="username" placeholder="Nazwa użytkownika" required
         class="w-full border border-gray-300 rounded p-2" />
@@ -19,10 +34,12 @@
         class="w-full border border-gray-300 rounded p-2" />
       <input type="text" name="repeatPassword" placeholder="Powtórz hasło" required
         class="w-full border border-gray-300 rounded p-2" />
-      <button type="submit" class="w-full bg-green-600 text-white p-3 rounded hover:bg-green-700 transition">
+      
+      <button id="register-submit-btn" type="submit" class="w-full bg-green-600 text-white p-3 rounded hover:bg-green-700 transition">
         Zarejestruj się
       </button>
     </form>
+    <div id="error-box" class="text-red-600 font-semibold text-xl text-center mt-4"></div>
 
     <p class="mt-4 text-center text-sm">
       Masz konto? <a href="login.html" class="text-green-600 hover:underline">Zaloguj się</a>
