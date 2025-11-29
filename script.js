@@ -104,7 +104,7 @@ async function checkAccessToken(accessToken) {
     buttons_container.classList.add("hidden"); 
     // jeśli zalogowany – pokaż ikonę użytkownika oraz przycisk wyloguj się
     authSection.innerHTML = `
-    <a href="/settings" class="text-2xl hover:text-gray-500 transition">
+    <a href="/pages/settings.html" class="text-2xl hover:text-gray-500 transition">
       Twoje konto 👤</a>
     
     <h2 class="ml-5 hover:text-gray-400 hover: transition"> Wyloguj się</h2>
